@@ -10,7 +10,7 @@ use Socialite;
 class AuthController extends Controller
 {
 	public function __construct() {
-		$this->middleware('guest');
+		//$this->middleware('guest');
 	}
 
     /**
@@ -25,19 +25,37 @@ class AuthController extends Controller
 
     public function handleProviderCallback() {
 
-        $google_user = Socialite::driver('google')->user();
-        
-        $data = [
-            'google_id' => $google_user->getId(),
-            'email' => $google_user->getEmail(),
-            'name' => $google_user->getName(),
-            'password' => 'Google',
-            'status' => 'online'
-        ];
-        
-        Auth::login(User::firstOrCreate($data));
 
-        return redirect()->to('welcome')->with($google_user);
+       
+        $googleUser = Socialite::driver('google')->user();
+        
+        $user = $this->findOrCreateGoogleUser($googleUser);
+
+        auth()->login($user);
+
+        return redirect('welcome');
+    }
+
+    public function findOrCreateGoogleUser($googleUser) {
+
+        $user = User::firstOrNew(['google_id' => $googleUser->id]);
+
+        if($user->exists) return $user;
+
+        $user->fill([
+            'name' => $googleUser->nickname,
+            'email' => $googleUser->email,
+            'google_id' => $googleUser->id,
+            'status' => 'online'
+        ])->save();
+
+        return $user;
+    }
+
+    public function logout() {
+        Auth::logout();
+
+        return redirect('/');
     }
 
 }

@@ -15,7 +15,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'google_id'
+        'name', 'email', 'status', 'google_id'
     ];
 
     /**
@@ -34,5 +34,13 @@ class User extends Authenticatable
      */
     public function favorites() {
         return $this->belongsToMany(Recipe::class)->withTimeStamps();
+    }
+    /**
+     * A user can have many comments.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\hasMany
+     */
+    public function comments() {
+        return $this->hasMany(Comment::class);
     }
 }

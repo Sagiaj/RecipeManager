@@ -19,10 +19,23 @@
         </div>
 
     </div> <!-- End of row class -->
+  @if(DB::table('recipe_user')->where('recipe_id', '=', $recipe->id)->where('user_id','=',Auth::user()->id)->exists())
+	     
+    <button class="edit-modal btn btn-success" id="removeFavorite" data-id="{{ $recipe->id }}" data-name=" {{ $recipe->name }} " data-recipeId=" {{ $recipe->id }} ">
 
-	<button class="edit-modal btn btn-primary" data-id="{{ $recipe->id }}" data-name=" {{ $recipe->name }} " data-recipeId=" {{ $recipe->id }} ">
-    <span class="glyphicon glyphicon-add"></span> Add to favorites!
+    <span class="glyphicon glyphicon-ok"></span> Successfully added!
+
     </button>
+
+  @else
+
+    <button class="edit-modal btn btn-primary" id="addFavorite" data-id="{{ $recipe->id }}" data-name=" {{ $recipe->name }} " data-recipeId=" {{ $recipe->id }} ">
+
+    <span class="glyphicon glyphicon-add"></span> Add to favorites!
+
+    </button>
+
+  @endif
 
     <div class="row">
     	
@@ -45,16 +58,29 @@
     </div>
 
     <hr>
+    
+    <div class="form-group row add">
+      <input type="hidden" name="_token" value="{{ csrf_field() }}">
+      <div class="col-md-5">
+        <input type="text" class="form-control" id="body" name="body" placeholder="text body" required>
+        <p class="error text-center alert alert-danger hidden">Your comment is empty</p>
+      </div>
+      <div class="col-md-2">
+        <button class="btn btn-primary" type="submit" id="addComment">
+          <span class="glyphicon glyphicon-plus"></span> Add a new comment
+        </button>
+      </div>
+    </div>
 
     <div class="row">
     	
-    	<div class="table-responsive">
+    	<div class="table-responsive" id="resp">
     		
     		<table class="table table-hover" id="table">
     		
 				<tr>
 					<th>No.</th>
-					<!--<th>User name</th>-->
+					<th>User name</th>
 					<th>Comment</th>
 				</tr>
 
@@ -63,14 +89,19 @@
 				<?php $num=1;; ?>
 
 				@foreach ($comments as $comment)
-					
-					<tr>
-						
-						<td> {{ $num++ }} </td>
+					<div class="col-md-12" id="comment{{$num}}">
+            
+              <tr>
+            
+                <td> {{ $num++ }} </td>
 
-						<td> {{ $comment->body }} </td>
+                <td> {{ $comment->user->name }} </td>
 
-					</tr>
+                <td> {{ $comment->body }} </td>
+
+              </tr>
+
+          </div>
 
 				@endforeach
 
@@ -102,18 +133,6 @@
                   <input type="text" class="form-control" id="fid" disabled>
                 </div>
               </div>
-              <div class="form-group">
-                <label class="control-label col-sm-2" for="title">Title:</label>
-                <div class="col-sm-10">
-                  <input type="name" class="form-control" id="ftitle">
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="control-label col-sm-2" for="body">Body:</label>
-                <div class="col-sm-10">
-                  <input type="text" class="form-control" id="fbody">
-                </div>
-              </div>
             </form>
             <div class="deleteContent">
               Are you Sure you want to delete <span class="did"></span> ? <span
@@ -133,6 +152,72 @@
       </div>
     </div>
 
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+
+  
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <script>
+      
+
+      $('#removeFavorite').on('click', function() {
+          $.ajax({
+              type: 'POST',
+              url: '{{$recipe->id}}/delete',
+              data: {
+                'recipe_id': {{$recipe->id}},
+                'user_id': Auth::user()->id
+              },
+              success: function(data) {
+                console.log('wtf');
+                $('#removeFavorite').replaceWith(`<button class="edit-modal btn btn-primary" id="addFavorite" data-id="{{ $recipe->id }}" data-name=" {{ $recipe->name }} " data-recipeId=" {{ $recipe->id }} "><span class="glyphicon glyphicon-add"></span> Add to favorites!</button>`);
+                $('#addFavorite').attr('id','addFavorite');
+                console.log('wtf2');
+              }
+          });
+      });
+
+      $('#addFavorite').on('click', function() {
+        console.log('hey');
+          $.ajax({
+              type: 'POST',
+              url: {{$recipe->id}},
+              data: {
+                'recipe_id': {{$recipe->id}},
+                'user_id': Auth::user()->id
+              },
+              success: function(data) {
+                console.log('hey');
+                  $('#addFavorite').replaceWith(`<button class="edit-modal btn btn-success" id="removeFavorite" data-id="{{ $recipe->id }}" data-name=" {{ $recipe->name }} " data-recipeId=" {{ $recipe->id }} "><span class="glyphicon glyphicon-ok"></span> Successfully added!</button>`);
+                  $('#removeFavorite').attr('id','removeFavorite');
+              }
+          });
+      });
 
 
+      $('#addComment').on('click', function() {
+
+          $.ajax({
+
+              type: 'POST',
+              url: '{{$recipe->id}}/store',
+              data: {
+                'id': {{$num}},
+                'recipe_id': {{$recipe->id}},
+                'user_id': 1,
+                'body': $('#body').val()
+              },
+              success: function(data) {
+                console.log(data);
+                user = data.user;
+                comment = data.comment;
+                $('#table').append(`<div class="col-md-12" id="comment`+{{$num}}+`"><tr><td> `+{{$num}}+` </td><td> `+user.name+` </td><td> `+data.comment.body+`</td></tr></div>`);
+              }
+          });
+      });
+
+    </script>
+  
 @endsection

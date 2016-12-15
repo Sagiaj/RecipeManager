@@ -9,7 +9,7 @@ use App\Recipe;
 class RecipeController extends Controller
 {
     public function __construct() {
-        $this->middleware('auth');
+        //$this->middleware('auth');
     }
 	
     public function index($recipeID) {
@@ -20,5 +20,9 @@ class RecipeController extends Controller
     	$comments = $recipe->comments;
         
     	return view('recipes.index', compact('recipe', 'ingredients', 'comments'));
+    }
+
+    public function addFavorite(Request $request) {
+        
     }
 }
