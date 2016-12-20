@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use App\User;
 
+use Illuminate\Support\Facades\Auth;
+
 class UserController extends Controller
 {
 	public function __construct() {
@@ -14,7 +16,7 @@ class UserController extends Controller
 
     public function index() {
 
-    	$user = User::find(1);
+    	$user = User::find(Auth::user()->id);
 
     	$favorites = $user->favorites;
 

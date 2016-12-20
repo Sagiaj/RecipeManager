@@ -26,12 +26,24 @@ class AuthController extends Controller
     public function handleProviderCallback() {
 
 
-       
-        $googleUser = Socialite::driver('google')->user();
-        
-        $user = $this->findOrCreateGoogleUser($googleUser);
+       try{
 
-        auth()->login($user);
+            $user = Socialite::with('google')->user();
+
+            //$googleUser = Socialite::driver('google')->user();
+            
+            //$user = $this->findOrCreateGoogleUser($googleUser);
+
+            //auth()->login($user);
+
+            return view('welcome')->withDetails($user)->withService('google');
+
+       } catch(Exception $e) {
+
+            echo $e->message();
+
+       }
+        
 
         return redirect('welcome');
     }

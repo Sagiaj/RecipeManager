@@ -1,3 +1,8 @@
+
+
+  
+
+@if(0)
 <!-- A copied default bootstrap navbar -->
 <nav class="navbar navbar-default">
   <div class="container-fluid">
@@ -17,6 +22,8 @@
       <ul class="nav navbar-nav">
         <li class="active"><a href="\">Home</a></li>
       </ul>
+      @endif
+      @if(0)
       <ul class="nav navbar-nav navbar-right">
         <!-- Authentication Links -->
         @if (Auth::guest())
@@ -41,8 +48,9 @@
                     </li>
                 </ul>
             </li>
-        @endif
-    </ul>
+            @endif
+      </ul>
+      @endif
 
     </div><!-- /.navbar-collapse -->
 

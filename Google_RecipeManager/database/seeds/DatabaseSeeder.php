@@ -28,19 +28,28 @@ class DatabaseSeeder extends Seeder
 			User::create([
 					'name' => $faker->name,
 					'email' => $faker->email,
-					'status' => 'online',
+					'password' => 'pass',
 					'google_id' => Hash::make('1234')
 				]);
 
 		}
 
+		Category::truncate();
+
+		foreach(range(1,10) as $index){
+			Category::create([
+					'name' => 'category'.$index
+				]);
+		}
+
 		Comment::truncate();
 
-		foreach(range(1, 30) as $index) {
+		foreach(range(1, 1000) as $index) {
 
 			$userId = User::orderBy(DB::raw('RAND()'))->first()->id;
 
 			Comment::create([
+					'parent_id' => random_int(0, 50),
 					'user_id' => $userId,
 					'recipe_id' => random_int(1,30),
 					'body' => $faker->paragraph(2)
@@ -54,6 +63,14 @@ class DatabaseSeeder extends Seeder
 			Recipe::create([
 					'name' => 'recipe'.$index,
 					'description' => $faker->sentence(3)
+				]);
+		}
+
+		Ingredient::truncate();
+
+		foreach (range(1,30) as $index) {
+			Ingredient::create([
+					'name' => 'ingredient'.$index
 				]);
 		}
 

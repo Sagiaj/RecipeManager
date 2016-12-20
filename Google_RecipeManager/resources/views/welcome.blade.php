@@ -2,39 +2,15 @@
 
 @section('title','| Main Page')
 
-
-
 @section('content')
-
-    <div class="row">
-
-        <div class="col-md-12">
-
-            <div class="jumbotron">
-            @if(Auth::check())
-              You are signed in as {{ Auth::user()->name }}
-            @else
-              You are not signed in!
-            @endif
-                <h1>Main Page</h1>
-
-                <p>Navigate through categories and choose your favorite recipes and share your opinions!</p>
-
-            </div>
-
-        </div>
-
-    </div> <!-- End of row class -->
 
       <div class="form-group row add">
 
-        <input type="hidden" name="_token" value="{{ csrf_field() }}">
+        <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
         <div class="col-md-3">
 
-          <input type="text" class="form-control" id="categoryName" name="categoryName" placeholder="Category Name" required>
-
-          <p class="error text-center alert alert-danger hidden"></p>
+          <input type="text" class="form-control" id="categoryName" name="name" placeholder="Category Name" required>
 
         </div>
 
@@ -50,31 +26,43 @@
 
       </div>
 
+      @if(count($errors->all()))
+
+          @foreach ($errors->all() as $error)
+
+          <ul>
+            
+            <p class="error text-center alert alert-danger hidden">
+
+              <li> {{$error}} </li>
+
+            </p>
+
+          </ul>
+            
+          @endforeach
+
+      @endif
+  
     <hr>
     
     <div class="row">
 
-        <div class="col-md-12">
+      <div class="col-lg-12">
 
-            @foreach ($categories as $category)
-
-            <div class="row">
-
-                <div class="col-md-12">
-
-                    <a href="categories/{{$category->id}}"><button class="btn btn-primary btn-lg btn-block"><span></span>{{ $category->name }} ({{ $category->recipes()->count() }})</button></a>
-                    
-                </div>
-
-            </div>
-
-            <hr>
+        @foreach ($categories as $category)
+          
+          
+            
+            <a href="categories/{{$category->id}}"><button class="customBtn" style="background-color: {{ sprintf('#%06X', mt_rand(0x5FFFFE, 0x600080)) }};"><span></span>{{ $category->name }} <hr> <div class="count">{{ $category->recipes()->count() }}</div></button></a>
         
-            @endforeach
-        </div>
-    </div>
+     
 
+        @endforeach
 
+      </div>
+      
+    </div>   
 
 @endsection
 

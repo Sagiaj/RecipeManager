@@ -1,30 +1,43 @@
 <?php
 
 
+Auth::routes();
+
+Route::get('/home', 'HomeController@index');
+
+Route::post('categories/delete', 'CategoryController@destroy');
+
+Route::post('recipes/{id}', 'FavoriteController@store');
+
+Route::post('recipes/{id}/delete', 'FavoriteController@destroy');
+
+Route::get('profile', 'UserController@index');
+
+Route::post('profile', 'FavoriteController@destroy');
+
+Route::get('google', 'AuthController@redirectToProvider');
+
+Route::get('google/callback', 'AuthController@handleProviderCallback');
+
+Route::get('login', 'Auth\LoginController@index');
+
+Route::get('logout', 'AuthController@logout');
+
 Route::group(['middleware' => ['web']], function() {
-
-	Route::get('google', 'AuthController@redirectToProvider');
-
-	Route::get('google/callback', 'AuthController@handleProviderCallback');
-
-	Route::get('login', 'Auth\LoginController@index');
-
-	Route::get('logout', 'AuthController@logout');
 
 	Route::get('/', 'PageController@index');
 
 	Route::get('categories/{id}', 'CategoryController@index');
 
+	Route::post('categories/store', 'CategoryController@store');
+
 	Route::get('recipes/{id}', 'RecipeController@index');
-
-	Route::post('recipes/{id}', 'FavoriteController@store');
-
-	Route::post('recipes/{id}/delete', 'FavoriteController@destroy');
 
 	Route::post('recipes/{id}/store', 'CommentController@store');
 
-	Route::get('profile', 'UserController@index');
+	Route::post('categories/{id}/addRecipe', 'RecipeController@store');
+});
 
-	Route::post('profile', 'FavoriteController@destroy');
 
-} );
+
+

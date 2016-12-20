@@ -14,4 +14,9 @@ class Ingredient extends Model
     public function recipes() {
     	return $this->belongsToMany(Recipe::class)->withTimeStamps();
     }
+
+    public function addIngredient(Ingredient $ingredient){
+    	$ingredient->save();
+    	return $ingredient;
+    }
 }

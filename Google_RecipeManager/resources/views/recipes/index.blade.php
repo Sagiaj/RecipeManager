@@ -6,9 +6,9 @@
 	
 	<div class="row">
 
-        <div class="col-md-12">
+        <div class="titleWrapper">
 			
-            <div class="jumbotron">
+            <div class="customTitle">
 				
                 <h1>{{$recipe->name}}</h1>
 
@@ -19,8 +19,8 @@
         </div>
 
     </div> <!-- End of row class -->
-  @if(DB::table('recipe_user')->where('recipe_id', '=', $recipe->id)->where('user_id','=',Auth::user()->id)->exists())
-	     
+  @if(DB::table('recipe_user')->where('recipe_id', '=', $recipe->id)->where('user_id','=',Auth::user()->id)->exists()) <!--  -->
+
     <button class="edit-modal btn btn-success" id="removeFavorite" data-id="{{ $recipe->id }}" data-name=" {{ $recipe->name }} " data-recipeId=" {{ $recipe->id }} ">
 
     <span class="glyphicon glyphicon-ok"></span> Successfully added!
@@ -72,12 +72,66 @@
       </div>
     </div>
 
+<!-- test section of comments!!!! -->
+    <div class="commentWrapper">
+      <?php $num=0; ?>
+      <ul class="comment-list fade-transition" style="opacity:1;">
+        
+        <li class="comment fade-transition" id="comment{{++$num}}">
+          
+          <div class="comment-content clearfix">
+            
+            <div class="avatar">
+              
+              <a href="#">
+                
+                <img src="http://www.gravatar.com/avatar/abdb59f1979c7849aa49821eac3afe68/?d=wavatar&s=200&r=g">
+                
+              </a>
+
+            </div>
+
+            <div class="comment-body">
+                
+              <header>
+                
+                <a class="authorName" href="#">test name</a>
+
+              </header>
+
+              <div class="comment-body-inner">
+                
+                <div class="commentMessage">
+                  
+                  test comment
+
+                </div>
+
+              </div>
+
+              <footer>
+                
+                <a href="#" class="customReply">Reply</a>
+
+              </footer>
+
+            </div> <!-- end of commentContainer -->
+
+          </div>
+
+        </li>
+
+      </ul>
+
+    </div>
+    <!-- end of the container of comments -->
+
     <div class="row">
     	
     	<div class="table-responsive" id="resp">
     		
     		<table class="table table-hover" id="table">
-    		
+
 				<tr>
 					<th>No.</th>
 					<th>User name</th>
@@ -168,13 +222,11 @@
               url: '{{$recipe->id}}/delete',
               data: {
                 'recipe_id': {{$recipe->id}},
-                'user_id': Auth::user()->id
+                'user_id': {{ Auth::user()->id }} 
               },
               success: function(data) {
-                console.log('wtf');
                 $('#removeFavorite').replaceWith(`<button class="edit-modal btn btn-primary" id="addFavorite" data-id="{{ $recipe->id }}" data-name=" {{ $recipe->name }} " data-recipeId=" {{ $recipe->id }} "><span class="glyphicon glyphicon-add"></span> Add to favorites!</button>`);
                 $('#addFavorite').attr('id','addFavorite');
-                console.log('wtf2');
               }
           });
       });
@@ -186,7 +238,7 @@
               url: {{$recipe->id}},
               data: {
                 'recipe_id': {{$recipe->id}},
-                'user_id': Auth::user()->id
+                'user_id': {{ Auth::user()->id }}
               },
               success: function(data) {
                 console.log('hey');
@@ -206,7 +258,7 @@
               data: {
                 'id': {{$num}},
                 'recipe_id': {{$recipe->id}},
-                'user_id': 1,
+                'user_id': {{ Auth::user()->id }},
                 'body': $('#body').val()
               },
               success: function(data) {
