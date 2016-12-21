@@ -126,6 +126,8 @@
         },
         success: function(data) {
           console.log('deleted category', data);
+          $('.row').remove();
+          window.location.href = "/";
         }
       });
     });

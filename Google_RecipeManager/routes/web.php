@@ -15,10 +15,6 @@ Route::get('profile', 'UserController@index');
 
 Route::post('profile', 'FavoriteController@destroy');
 
-Route::get('google', 'AuthController@redirectToProvider');
-
-Route::get('google/callback', 'AuthController@handleProviderCallback');
-
 Route::get('login', 'Auth\LoginController@index');
 
 Route::get('logout', 'AuthController@logout');
@@ -36,8 +32,12 @@ Route::group(['middleware' => ['web']], function() {
 	Route::post('recipes/{id}/store', 'CommentController@store');
 
 	Route::post('categories/{id}/addRecipe', 'RecipeController@store');
+	
 });
 
+//I left google routes & implementation here so that I can ask you questions that refer to it
+Route::get('google', 'AuthController@redirectToProvider');
 
+Route::get('google/callback', 'AuthController@handleProviderCallback'); 
 
 

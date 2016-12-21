@@ -18,7 +18,7 @@
 	            'name': $('#categoryName').val()
 	          },
 	          success: function(data) {
-	            console.log(data);
+	            $('#appendableCategory').append(`<a href="categories/`+data.id+`"><button class="customBtn" style="background-color: {{ sprintf('#%06X', mt_rand(0x5FFFFE, 0x600080)) }};"><span></span>`+data.name+` <hr> <div class="count">0</div></button></a>`);
 	          }
 	        });
       	}

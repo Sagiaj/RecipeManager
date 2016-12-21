@@ -17,22 +17,22 @@
 	                
 	                <img src="http://www.gravatar.com/avatar/abdb59f1979c7849aa49821eac3afe68/?d=wavatar&s=200&r=g">
 
-	                
 	              </a>
 
 	              <div class="innerAvatarInfo">
 	              			
-	          				<a href=""> <h3>{{ Auth::user()->name }}</h3> </a>
+	          			<a href=""> <h3>{{ Auth::user()->name }}</h3> </a>
 
 	              </div>
 
 	              <div>
 	              			
-	              			<p style="color: white;">Have fun with my app, {{Auth::user()->name}}!</p>
+	          			<p style="color: white;">Have fun with my app, {{Auth::user()->name}}!</p>
 
-	              		</div>
+	          	  </div>
 
 	            </div>
+	            
             </li>
 
 	    	<hr>
@@ -70,7 +70,7 @@
 
 </div>
 	
-  
+  @include('partials._javascript')
     
      <meta name="_token" content="{{ csrf_token() }}">
 	<script>$.ajaxSetup({ headers: {'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')} })</script>

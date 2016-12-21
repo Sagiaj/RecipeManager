@@ -48,16 +48,12 @@
     
     <div class="row">
 
-      <div class="col-lg-12">
+      <div class="col-lg-12" id="appendableCategory">
 
-        @foreach ($categories as $category)
-          
-          
+        @foreach ($categories as $category)   
             
             <a href="categories/{{$category->id}}"><button class="customBtn" style="background-color: {{ sprintf('#%06X', mt_rand(0x5FFFFE, 0x600080)) }};"><span></span>{{ $category->name }} <hr> <div class="count">{{ $category->recipes()->count() }}</div></button></a>
-        
-     
-
+            
         @endforeach
 
       </div>

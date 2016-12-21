@@ -12,6 +12,9 @@ use App\Ingredient;
 
 class RecipeController extends Controller
 {
+    /**
+     * Checking whether the user is sessioned
+     */
     public function __construct() {
         $this->middleware('auth');
     }
@@ -32,40 +35,36 @@ class RecipeController extends Controller
      * Adds a recipe according to the ORM sent in the request
      */
     public function store($categoryID, Request $request) {
-
+        
+        //Validate given request
         $this->validate($request, [
                 'categoryId' => 'required',
                 'recipeName' => 'required',
                 'ingredients' => 'required',
                 'description' => 'required'
             ]);
+        $recipe = $this->createWithCategory($categoryID, $request);
+
+        $this->attachIngredients($request, $recipe);
+        
+
+        return $recipe;
+    }
+
+    public function createWithCategory($categoryID, Request $request) {
         $category = Category::find($categoryID);
-        $recipe = new Recipe;
-
-
-        $recipe->name = $request->recipeName;
-        $recipe->description = $request->description;
-        $recipe->save();
-
+        //Create the recipe instance and attach it to a category
+        $recipe = Recipe::create([
+                'name' => $request->recipeName,
+                'description' => $request->description
+            ]);
         $category->recipes()->attach($recipe);
 
-        $ingredientsArray = explode(',', $request->ingredients);
-
-        foreach ($ingredientsArray as $ingredient => $value) {
-            if( Ingredient::all()->where('name','=',$value)->count() ){
-                $ing = Ingredient::all()->where('name','=',$value)->first();
-                $ing->recipes()->attach($recipe);
-            } else{
-                $ingredient_var =  new Ingredient;
-                $ingredient_var->name = $value;
-                $ing = $ingredient_var->addIngredient($ingredient_var);
-                $recipe->ingredients()->attach($ing);
-            }
-        }
-
+        //Attaching the recipe to other categories
         if(isset($request->otherCategories)){
             $categoriesArray = explode(',', $request->otherCategories);
 
+            //If a given category number exists => attach
             foreach ($categoriesArray as $category => $value) {
                 $categ = Category::find($value);
                 if($categ!=null){
@@ -76,4 +75,21 @@ class RecipeController extends Controller
 
         return $recipe;
     }
+
+    public function attachIngredients(Request $request, Recipe $recipe) {
+        //Arranging the ingredients input in an array
+        $ingredientsArray = explode(',', $request->ingredients);
+
+        foreach ($ingredientsArray as $ingredient => $value) {
+            if( ($ing = Ingredient::all()->where('name','=',$value)->first()) ){
+                $ing->recipes()->attach($recipe);
+            } else{
+                $ing = Ingredient::create([
+                        'name' => $value
+                    ]);
+                $recipe->ingredients()->attach($ing);
+            }
+        }
+    }
+
 }

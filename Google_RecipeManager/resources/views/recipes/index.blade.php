@@ -232,7 +232,6 @@
       });
 
       $('#addFavorite').on('click', function() {
-        console.log('hey');
           $.ajax({
               type: 'POST',
               url: {{$recipe->id}},
@@ -241,7 +240,6 @@
                 'user_id': {{ Auth::user()->id }}
               },
               success: function(data) {
-                console.log('hey');
                   $('#addFavorite').replaceWith(`<button class="edit-modal btn btn-success" id="removeFavorite" data-id="{{ $recipe->id }}" data-name=" {{ $recipe->name }} " data-recipeId=" {{ $recipe->id }} "><span class="glyphicon glyphicon-ok"></span> Successfully added!</button>`);
                   $('#removeFavorite').attr('id','removeFavorite');
               }
@@ -262,14 +260,13 @@
                 'body': $('#body').val()
               },
               success: function(data) {
-                console.log(data);
                 user = data.user;
                 comment = data.comment;
-                $('#table').append(`<div class="col-md-12" id="comment`+{{$num}}+`"><tr><td> `+{{$num}}+` </td><td> `+user.name+` </td><td> `+data.comment.body+`</td></tr></div>`);
+                $('#table').append(`<div class="col-md-12" id="comment`+{{$num}}+`"><tr><td> `+{{$num}}+` </td><td> `+user.name+` </td><td> `+comment.body+`</td></tr></div>`);
               }
           });
       });
 
-    </script>
+    </script>   
   
 @endsection

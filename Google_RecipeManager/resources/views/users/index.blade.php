@@ -35,9 +35,6 @@
 
 						</tr>
 
-			
-					
-
 				@endforeach
 
     		</table>
@@ -47,25 +44,22 @@
     </div>
 
     <script>
-    	
+        
     $('.favorite').on('click',function() {
-    	console.log(this);
-    	id = this.id;
-    	recipeId = this.getAttribute('data-recipe');
-    	$.ajax({
-    		type: 'POST',
-    		url: 'profile',
-    		data: {
-    			'id': id,
-    			'user_id': 1,//Auth::user()->id
-    			'recipe_id': recipeId
-
-    		},
-    		success: function(data) {
-    			console.log(id);
-    			$('#favorite'+id).remove();
-    		}
-    	});
+        id = this.id;
+        recipeId = this.getAttribute('data-recipe');
+        $.ajax({
+            type: 'POST',
+            url: 'profile',
+            data: {
+                'id': id,
+                'user_id': {{Auth::user()->id}},
+                'recipe_id': recipeId
+            },
+            success: function(data) {
+                $('#favorite'+id).remove();
+            }
+        });
 
     });
 

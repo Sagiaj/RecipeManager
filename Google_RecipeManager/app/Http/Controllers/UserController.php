@@ -14,6 +14,9 @@ class UserController extends Controller
 		$this->middleware('auth');
 	}
 
+	/**
+	 * User profile eager-loaded with favorites
+	 */
     public function index() {
 
     	$user = User::find(Auth::user()->id);

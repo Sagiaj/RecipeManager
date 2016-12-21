@@ -25,7 +25,6 @@ class Category extends Model
         if(isset($category)){
             $recipes = $category->recipes;
             foreach ($recipes as $recipe) {
-            	echo $recipe->id,$category->id;
                 $category->recipes()->detach($recipe);
                 $recipe->categories()->detach($category);
             }

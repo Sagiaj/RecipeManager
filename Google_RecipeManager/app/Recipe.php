@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Recipe extends Model
 {
+	protected $fillable = [
+		'name', 'description'
+	];
     /**
 	 * A recipe can be a many users' favorite(belongs to many users).
 	 *
@@ -36,9 +39,10 @@ class Recipe extends Model
     /**
 	 * A recipe can have many comments.
 	 *
-	 * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
 	 */
     public function comments() {
     	return $this->hasMany(Comment::class);
     }
+    
 }
