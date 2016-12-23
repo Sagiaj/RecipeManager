@@ -1,6 +1,16 @@
 body{
 	background-color: #342E3B;
 }
+a, abbr, acronym, address, blockquote, button, caption, cite, code, dd,
+del, dfn, dl, dt, em, fieldset, form, h1, h2, h3, h4, h5, h6, img, label,
+legend, li, ol, p, pre, q, s, samp, small, strike, strong, 
+sub, sup, table, tbody, td, tfoot, th, thead, tr, tt, 
+ul, var, .costumForm{
+	padding: 0px;
+	border: 0px;
+	line-height: 1;
+	list-style: none;
+}
 
 .container-fluid .row{
 	background-color: white;
@@ -60,6 +70,13 @@ body{
 	width: 95%;
 }
 
+.sidebar-nav img{
+	border-radius: 50%;
+	width: 80px;
+	height: 80px;
+	margin-bottom: 10px;
+}
+
 .customBox{
 	padding-bottom: 5%;
 	margin-right: 10%;
@@ -110,6 +127,10 @@ body{
 	color: rgba(255, 255, 255, 0.85);
 }
 
+li.comment{
+	padding: 20px 0;
+}
+
 div.commentWrapper {
 	display: inline-block;
 	margin: 5% auto;
@@ -122,17 +143,25 @@ div.commentWrapper {
 
 .comment-content {
 	position: relative;
-	display: block;
+	display: inline-block;
+	margin-bottom: 20px;
 	opacity:1;
 }
 
 .comment-list{
 	list-style: none;
+	list-style-type: none;
 	margin:0px;
 	padding:0px;
 }
 
-.comment .indicator {
+.comment-list .comment:after, .comment-list .comment:before{
+	display: table;
+	content: "";
+	line-height: 0px;
+}
+
+.comment-content .indicator {
 	top:0;
 	left:0;
 	width: 4px;
@@ -141,15 +170,31 @@ div.commentWrapper {
 	border-right: 1px;
 }
 
-.comment .avatar{
+.avatar{
 	float:left;
 }
 
-.avatar img{
-	width:64px;
-	height:64px;
-	border-radius:50%;
+.avatar .user{
+	position: relative;
+	z-index: 100;
+	padding: 0px;
+}
 
+.comment .avatar{
+	margin-right: 12px;
+}
+
+.comment .avatar img{
+	width: 64px;
+	height: 64px;
+	border-radius: 50%;
+}
+
+.children .comment:after, .children .comment:before,
+.comment-content:after, .comment-content:before{
+	display: table;
+	line-height: 0px;
+	content: "";
 }
 
 .comment-body{
@@ -159,6 +204,158 @@ div.commentWrapper {
 	border-radius: 8px;
 }
 
+.comment-content .comment-body{
+	overflow: hidden;
+}
+
+.comment-body-inner{}
+
+.comment_header{
+	line-height: 1px;
+	padding-right: 48px;
+	margin-bottom: 4px;
+}
+
 .innerAvatarInfo{
 	display: inline-flex;
+}
+
+.comment_header .authorName{
+	font-weight: 700;
+	color: rgb(0, 177, 179);
+}
+
+.comment-content .message-container{
+	position: relative;
+	overflow: hidden;
+	zoom: 1;
+	width: 100%;
+}
+
+.comment-content .comment-message{
+	padding: 5px 0;
+	line-height: 1.7;
+	word-break: break-word;
+}
+
+.comment-content .comment-message p{
+	margin:0;
+	line-height: 21px;
+}
+
+.comment-content footer{
+	clear:both;
+}
+
+.comment-footer_menu{
+	margin: 4px;
+	padding: 0px;
+}
+
+.comment-footer_menu:after, .comment-footer_menu:before{
+	display: table;
+	content: "";
+	line-height: 0;
+}
+
+.comment-footer_menu>li{
+	float: left;
+	list-style-type: none;
+	padding: 0px;
+	line-height: 15px;
+	margin-right: 7px;
+}
+
+.comment-body footer .reply{
+	margin-left: 5px;
+}
+
+.reply-form-container{
+	display: block;
+	display:none;
+}
+
+.experiment{
+	margin-left: 60px;
+}
+
+.comment .costumForm{
+	margin-left: 80px;
+	/*display:none;*/
+}
+
+.comment .costumForm .formGroup{
+	margin-bottom: 10px;
+}
+
+.form-control{
+	border-radius: 2px;
+}
+
+.comment textarea{
+	overflow-x:hidden;
+	overflow:hidden;
+	word-wrap: break-word;
+	resize: none;
+	height: 54px;
+	width: 100%;
+}
+
+.comments .costumForm button[type="submit"]{
+	min-width: 55px;
+}
+
+.reply-form-container .commentbox{
+	margin: 24px 0 0 60px;
+}
+
+.textarea{
+	overflow: auto;
+	max-height: 350px;
+	resize: none;
+	display: block;
+	padding: 6px 10px 8px;
+	margin: 0px;
+	width: 100%;
+	height: auto;
+	word-wrap: break-word;
+}
+
+.textarea div, .textarea p{
+	margin: 0px;
+	line-height: 1.4;
+}
+
+.textarea-wrapper{
+	background-color: #fff;
+	border: 2px solid #dbdfe4;
+	position: relative;
+	border-radius: 4px;
+	margin: 0 0 0 48px;
+}
+
+.textarea-wrapper:after, .textarea-wrapper:before{
+	display: table;
+	content: "";
+	line-height: 0px;
+}
+
+.placeholder{
+	color: #7f919e;
+	line-height: 30px;
+	position: absolute;
+	overflow: hidden;
+	cursor: text;
+}
+
+.submitComment{
+	display:inline;
+	margin:0px;
+	padding: 15px 30px;
+	text-align: center;
+	background-color: #7f919e;
+}
+
+.viewMore{
+	margin-left: 80px;
 }

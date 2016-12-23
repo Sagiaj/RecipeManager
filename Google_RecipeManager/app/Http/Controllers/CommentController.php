@@ -18,6 +18,9 @@ class CommentController extends Controller
 
     	$comment->user_id = $request->user_id;
 
+        if(isset($request->parent_id)) 
+            $comment->parent_id = $request->parent_id;
+
     	$comment->recipe_id = $request->recipe_id;
 
     	$comment->save();
@@ -27,4 +30,25 @@ class CommentController extends Controller
     	return compact('comment', 'user');
     	
     }
+
+    public function getChildren(Request $request) {
+        $comment = Comment::find($request->commentId);
+
+        $children = $comment->children;
+
+        $childrenString = '<ul>';
+        $request->num;
+        foreach ($children as $child) {
+            $request->num++;
+            echo $request->num;
+            $childrenString .= $child->getAppendString($request->num);
+
+        }
+        $number = $request->id;
+        $childrenString .= '</ul>';
+
+        return $childrenString;
+    }
+    
+
 }

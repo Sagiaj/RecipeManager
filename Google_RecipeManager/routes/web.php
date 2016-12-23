@@ -31,6 +31,8 @@ Route::group(['middleware' => ['web']], function() {
 
 	Route::post('recipes/{id}/store', 'CommentController@store');
 
+	Route::post('recipes/{id}/viewMore', 'CommentController@getChildren');
+
 	Route::post('categories/{id}/addRecipe', 'RecipeController@store');
 	
 });

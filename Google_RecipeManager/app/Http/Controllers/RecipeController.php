@@ -10,6 +10,8 @@ use App\Category;
 
 use App\Ingredient;
 
+use App\Comment;
+
 class RecipeController extends Controller
 {
     /**
@@ -28,7 +30,10 @@ class RecipeController extends Controller
 
         $users = $recipe->users;
         
-    	return view('recipes.index', compact('recipe', 'ingredients', 'comments', 'users'));
+        //Should be in model
+        $rootComments = $recipe->comments->where('parent_id','=',0);
+        
+    	return view('recipes.index', compact('recipe', 'ingredients', 'comments', 'users', 'rootComments'));
     }
 
     /**

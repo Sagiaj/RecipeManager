@@ -42,19 +42,7 @@ class DatabaseSeeder extends Seeder
 				]);
 		}
 
-		Comment::truncate();
 
-		foreach(range(1, 1000) as $index) {
-
-			$userId = User::orderBy(DB::raw('RAND()'))->first()->id;
-
-			Comment::create([
-					'parent_id' => random_int(0, 50),
-					'user_id' => $userId,
-					'recipe_id' => random_int(1,30),
-					'body' => $faker->paragraph(2)
-				]);
-		}
 
 		Recipe::truncate();
 
@@ -66,6 +54,28 @@ class DatabaseSeeder extends Seeder
 				]);
 		}
 
+		Comment::truncate();
+
+				foreach(range(1, 1000) as $index) {
+
+					$userId = User::orderBy(DB::raw('RAND()'))->first()->id;
+
+					$recipeId = random_int(1, 30);
+					$parentId=0;
+					$recipe = Recipe::find($recipeId);
+					if(isset($recipe)){
+						if($recipe->comments()->count()){
+							$parentId = DB::table('comments')->where('recipe_id','=',$recipeId)->where('parent_id','=','0')->orderBy(DB::raw('RAND()'))->first()->id;
+						}
+					}
+
+					Comment::create([
+							'parent_id' => $index>300 ? $parentId : 0,
+							'user_id' => $userId,
+							'recipe_id' => isset($recipe) ? $recipeId : random_int(1, 30),
+							'body' => $faker->paragraph(2)
+						]);
+				}
 		Ingredient::truncate();
 
 		foreach (range(1,30) as $index) {

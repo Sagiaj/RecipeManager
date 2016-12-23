@@ -20,7 +20,7 @@
 
     </div> <!-- End of row class -->
   @if(DB::table('recipe_user')->where('recipe_id', '=', $recipe->id)->where('user_id','=',Auth::user()->id)->exists()) <!--  -->
-
+     
     <button class="edit-modal btn btn-success" id="removeFavorite" data-id="{{ $recipe->id }}" data-name=" {{ $recipe->name }} " data-recipeId=" {{ $recipe->id }} ">
 
     <span class="glyphicon glyphicon-ok"></span> Successfully added!
@@ -74,96 +74,99 @@
 
 <!-- test section of comments!!!! -->
     <div class="commentWrapper">
-      <?php $num=0; ?>
-      <ul class="comment-list fade-transition" style="opacity:1;">
+    
+    <?php $num=0; ?>
+
+      <ul class="comment-list" style="opacity:1;">
         
-        <li class="comment fade-transition" id="comment{{++$num}}">
+        @foreach($rootComments as $comment)
           
-          <div class="comment-content clearfix">
-            
-            <div class="avatar">
-              
-              <a href="#">
-                
-                <img src="http://www.gravatar.com/avatar/abdb59f1979c7849aa49821eac3afe68/?d=wavatar&s=200&r=g">
-                
-              </a>
+          <?php $num++; ?>
 
-            </div>
+            <li class="comment experiment" id="comment{{$num}}">
+          
+              <div class="comment-content clearfix">
 
-            <div class="comment-body">
+                <div class="indicator"></div>
                 
-              <header>
-                
-                <a class="authorName" href="#">test name</a>
-
-              </header>
-
-              <div class="comment-body-inner">
-                
-                <div class="commentMessage">
+                <div class="avatar">
                   
-                  test comment
+                  <a href="#" class="user">
+                    
+                    <img src="http://www.gravatar.com/avatar/abdb59f1979c7849aa49821eac3afe68/?d=wavatar&s=200&r=g">
+                    
+                  </a>
 
                 </div>
 
+                <div class="comment-body">
+                    
+                  <header>
+                    
+                    <a class="authorName" href="#">{{$comment->user->name}}</a>
+
+                  </header>
+
+                  <div class="comment-body-inner">
+
+                      <div class="comment-message">
+                          
+                          {{ $comment->body }}
+
+                      </div>
+
+                  </div>
+
+                  <footer style="display:block;">
+                        
+                          <a href="#/" class="reply" onclick="document.getElementById('reply{{$num}}').style.display='block'" >Reply</a>
+
+                  </footer>
+
+                </div> <!-- end of comment-body -->
+
+                <div class="reply-form-container" data-id="{{$num}}" id="reply{{$num}}">
+                  
+                  <div class="costumForm">
+                    
+                    <div class="formGroup commentbox">
+
+                      <input type="hidden" name="_token" value="{{csrf_token()}}">
+                      
+                      <textarea id="textarea{{$num}}" class="form-control" wrap="hard" maxlength="500" placeholder="Leave a reply..." required></textarea>
+
+                    </div>
+
+                    <div class="pull-left">
+                      
+                      <button id="postBtn{{$num}}" onclick="replyFunction(this)" data-inorderId="{{$num}}" data-commentId="{{$comment->id}}" data-commenterId="{{$comment->user->id}}" type="submit" class="btn btn-success btn-sm">Post</button>
+
+                      <button type="button" onclick="document.getElementById('reply{{$num}}').style.display='none'" class="btn btn-default btn-sm cancel">Cancel</button>
+
+                    </div>
+
+                  </div> <!-- end of costumForm -->
+
+                </div> <!-- end of form container -->
+
+                <div>
+                  
+                  <a id="childrenOf{{$num}}" onclick="viewMore(this)" data-inorderId="{{$num}}" data-commentId="{{$comment->id}}" class="viewMore" href="#\">view {{$comment->children->count()}} more replies</a>
+
+                </div>
+                
+
               </div>
 
-              <footer>
-                
-                <a href="#" class="customReply">Reply</a>
+            </li>
 
-              </footer>
-
-            </div> <!-- end of commentContainer -->
-
-          </div>
-
-        </li>
+        @endforeach
 
       </ul>
 
     </div>
     <!-- end of the container of comments -->
-
-    <div class="row">
-    	
-    	<div class="table-responsive" id="resp">
-    		
-    		<table class="table table-hover" id="table">
-
-				<tr>
-					<th>No.</th>
-					<th>User name</th>
-					<th>Comment</th>
-				</tr>
-
-				{{ csrf_field() }}
-
-				<?php $num=1;; ?>
-
-				@foreach ($comments as $comment)
-					<div class="col-md-12" id="comment{{$num}}">
-            
-              <tr>
-            
-                <td> {{ $num++ }} </td>
-
-                <td> {{ $comment->user->name }} </td>
-
-                <td> {{ $comment->body }} </td>
-
-              </tr>
-
-          </div>
-
-				@endforeach
-
-    		</table>
-
-    	</div>
-
-    </div>
+    
 
     <div id="myModal" class="modal fade" role="dialog">
       <div class="modal-dialog">
@@ -260,13 +263,53 @@
                 'body': $('#body').val()
               },
               success: function(data) {
+                {{$num++}}
                 user = data.user;
                 comment = data.comment;
-                $('#table').append(`<div class="col-md-12" id="comment`+{{$num}}+`"><tr><td> `+{{$num}}+` </td><td> `+user.name+` </td><td> `+comment.body+`</td></tr></div>`);
+                $('.comment-list').append('<li class="comment experiment" id="comment'+{{$num}}+'"><div class="comment-content clearfix"><div class="indicator"></div><div class="avatar"><a href="#" class="user"><img src="http://www.gravatar.com/avatar/abdb59f1979c7849aa49821eac3afe68/?d=wavatar&s=200&r=g"></a></div><div class="comment-body"><header><a class="authorName" href="#">'+user.name+'</a></header><div class="comment-body-inner"><div class="comment-message">'+comment.body+'</div></div><footer style="display:block;"><a href="#/" class="reply" onclick="document.getElementById('+"'"+'reply'+{{$num}}+''+"'"+').style.display='+"'"+'block'+"'"+'">Reply</a></footer></div> <!-- end of comment-body --><div class="reply-form-container" data-id="'+{{$num}}+'" id="reply'+{{$num}}+'"><div class="costumForm"><div class="formGroup commentbox"><input type="hidden" name="_token" value="'+1+'"><textarea id="textarea'+{{$num}}+'" class="form-control" wrap="hard" maxlength="500" placeholder="Leave a reply..." required></textarea></div><div class="pull-left"><button id="postBtn'+{{$num}}+'" onclick="replyFunction(this)" data-inorderId="'+{{$num}}+'" data-commentId="'+comment.id+'" data-commenterId="'+user.id+'" type="submit" class="btn btn-success btn-sm">Post</button><button type="button" onclick="document.getElementById('+"'"+'reply'+{{$num}}+''+"'"+').style.display='+"'"+'none'+"'"+'" class="btn btn-default btn-sm cancel">Cancel</button></div></div> <!-- end of costumForm --></div> <!-- end of form container --></div>');
               }
           });
       });
 
-    </script>   
+      function viewMore(myData) {
+        console.log(myData);
+        <?php $num++; ?>
+        $.ajax({
+          type: 'POST',
+          url: '{{$recipe->id}}/viewMore',
+          data: {
+            'commentId': myData.getAttribute('data-commentId'),
+            'num': {{$num}}
+          }, 
+          success: function(data) {
+            $('#comment'+(myData.getAttribute('data-inorderId'))).append(data);
+            $('#childrenOf'+(myData.getAttribute('data-inorderId')))[0].style.display="none";
+          }
+        });
+      }
+
+      function replyFunction(myData) {
+        console.log(myData);
+        
+        $.ajax({
+            type: 'POST',
+            url: '{{$recipe->id}}/store',
+            data: {
+              'body': $('#textarea'+myData.getAttribute('data-inorderId')).val(),
+              'parent_id': myData.getAttribute('data-commentid'),
+              'recipe_id': {{ $recipe->id }},
+              'user_id': {{ Auth::user()->id }} 
+            },
+            success: function(data) {
+              console.log(data);
+              {{$num++}}
+
+              $('#comment'+(myData.getAttribute('data-inorderId'))).append('<li class="comment experiment" id="comment'+{{$num}}+'"><div class="comment-content clearfix"><div class="indicator"></div><div class="avatar"><a href="#" class="user"><img src="http://www.gravatar.com/avatar/abdb59f1979c7849aa49821eac3afe68/?d=wavatar&s=200&r=g"></a></div><div class="comment-body"><header><a class="authorName" href="#">'+data.user.name+'</a></header><div class="comment-body-inner"><div class="comment-message">'+data.comment.body+'</div></div><footer style="display:block;"><a href="#/" class="reply" onclick="document.getElementById('+"'"+'reply'+{{$num}}+''+"'"+').style.display='+"'"+'block'+"'"+'">Reply</a></footer></div> <!-- end of comment-body --><div class="reply-form-container" data-id="'+{{$num}}+'" id="reply'+{{$num}}+'"><div class="costumForm"><div class="formGroup commentbox"><input type="hidden" name="_token" value="'+1+'"><textarea id="textarea'+{{$num}}+'" class="form-control" wrap="hard" maxlength="500" placeholder="Leave a reply..." required></textarea></div><div class="pull-left"><button id="postBtn'+{{$num}}+'" onclick="replyFunction(this)" data-inorderId="'+{{$num}}+'" data-commentId="'+data.comment.id+'" data-commenterId="'+data.user.id+'" type="submit" class="btn btn-success btn-sm">Post</button><button type="button" onclick="document.getElementById('+"'"+'reply'+{{$num}}+''+"'"+').style.display='+"'"+'none'+"'"+'" class="btn btn-default btn-sm cancel">Cancel</button></div></div> <!-- end of costumForm --></div> <!-- end of form container --></div>');
+            }
+        });
+      }
+
+
+    </script>
   
 @endsection
